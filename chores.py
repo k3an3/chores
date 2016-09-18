@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 import datetime
 import json
-import requests
-from apscheduler.schedulers.background import BackgroundScheduler
 import random
+import sys
 import time
+
+import requests
 import yaml
+from apscheduler.schedulers.background import BackgroundScheduler
 
 SLACK_URL = 'https://hooks.slack.com/services/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'
 USERS = ('gemanley', 'jpbush', 'keane',)
@@ -25,8 +27,8 @@ def should_run_quad_weekly():
     return get_week() % 4 == 1
 
 
-def post_to_slack(message):
-    requests.post(SLACK_URL, data=json.dumps(parse_for_slack(message)))
+def post_to_slack(name, message):
+    requests.post(SLACK_URL, data=json.dumps(parse_for_slack(name, message)))
 
 
 def parse_for_slack(name, user_chores):
@@ -89,3 +91,10 @@ if __name__ == '__main__':
     sched.start()
     sched.add_job(bi_weekly_clean, trigger='cron', day='6')
     sched.add_job(weekly_clean, trigger='cron', day='6')
+    x = 0
+    while True:
+        time.sleep(1)
+        x += 1
+        if x % 5 == 0:
+            sys.stdout.write('.')
+            sys.stdout.flush()
