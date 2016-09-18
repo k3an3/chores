@@ -87,6 +87,10 @@ def get_user_chores(chores):
             for chore in chores[group]:
                 user_chores[random.choice(SECONDARY_SHARED_USERS)].append(
                     group + ':' + chore)
+                for user in USERS:
+                    if user not in SECONDARY_SHARED_USERS:
+                        user_chores[user].append(
+                            group + ':' + chore)
         else:
             for user in USERS:
                 for chore in chores[group][1:]:
