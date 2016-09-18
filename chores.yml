@@ -36,3 +36,22 @@ weekly:
 
   - General:
     - clean phone, keys, wallet
+
+quad-weekly:
+  - Kitchen:
+    - clean inside of microwave
+    - wipe down outside of cabinets
+
+  - Bathroom:
+    - clean shower
+    - clean cabinets/drawers
+
+  - Bedroom:
+    - lightly clean monitors
+    - dust computer tower
+
+  - Living-room:
+    - dust everything including light fixtures
+
+  - General:
+    - wipe down clothes washer and dryer
