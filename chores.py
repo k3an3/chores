@@ -26,7 +26,7 @@ def should_run_quad_weekly():
 
 
 def post_to_slack(message):
-    requests.post(SLACK_URL, data=json.dumps(message))
+    requests.post(SLACK_URL, data=json.dumps(parse_for_slack(message)))
 
 
 def parse_for_slack(name, user_chores):
@@ -73,21 +73,19 @@ def get_chores(period):
 
 
 def bi_weekly_clean():
-    parse_for_slack('Bi-weekly', get_user_chores(get_chores('bi-weekly')))
+    if should_run_bi_weekly()
+        post_to_slack('Bi-weekly', get_user_chores(get_chores('bi-weekly')))
 
 
 def weekly_clean():
-    parse_for_slack('Weekly', get_user_chores(get_chores('weekly')))
+    post_to_slack('Weekly', get_user_chores(get_chores('weekly')))
 
 
 if __name__ == '__main__':
     f = open('chores.yml')
     chores.update(yaml.load(f))
 
-    bi_weekly_clean()
-    """
     sched = BackgroundScheduler()
     sched.start()
     sched.add_job(bi_weekly_clean, trigger='cron', day='6')
     sched.add_job(weekly_clean, trigger='cron', day='6')
-    """
