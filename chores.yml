@@ -1,0 +1,38 @@
+bi-weekly:
+  - Kitchen:
+    - scrub/mop floor
+    - wipe down fridge with windex
+    - wipe down dishwasher with windex
+
+  - Bathroom:
+    - scrub/mop floor
+    - scrub toilet inside and out with windex
+    - scrub sink with windex
+    - wash rugs
+
+  - Bedroom:
+    - wash bed sheets
+    - dust dresser and other surfaces
+
+  - General:
+    - vacuum entire appartment
+    - wipe down all door handles and light switches with windex
+
+weekly:
+  - Kitchen:
+    - wipe down counters, stove, microwave face with windex
+    - change hand towel
+    - scrub sink with windex
+    - sweep floor
+
+  - Bathroom:
+    - wipe down sink
+    - change hand towel and face towels
+    - clean mirror with windex
+
+  - Bedroom:
+    - clean keyboard, mouse, arm rests
+    - wipe down desk, nightstand
+
+  - General:
+    - clean phone, keys, wallet
