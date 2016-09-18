@@ -73,7 +73,7 @@ def get_chores(period):
 
 
 def bi_weekly_clean():
-    if should_run_bi_weekly()
+    if should_run_bi_weekly():
         post_to_slack('Bi-weekly', get_user_chores(get_chores('bi-weekly')))
 
 
