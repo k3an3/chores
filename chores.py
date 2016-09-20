@@ -142,7 +142,7 @@ if __name__ == '__main__':
     sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
     sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour='8')
     sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
-    sched.add_job(credit_check, trigger='cron', day='27', hour='8')
+    sched.add_job(credit_check, trigger='cron', day='27-31', hour='8')
 
     x = 0
     while True:
