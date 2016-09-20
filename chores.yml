@@ -55,3 +55,9 @@ quad-weekly:
 
   - General:
     - wipe down clothes washer and dryer
+
+bills:
+  - name: jpbush
+    credit: 182
+  - name: gemanley
+    credit: 1182

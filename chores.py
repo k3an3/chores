@@ -15,6 +15,7 @@ USERS = ('gemanley', 'jpbush', 'keane',)
 SHARED_CATEGORIES = ('Kitchen', 'General',)
 SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
+STANDARD_DUES = 440
 
 # SLACK_URL = DEV_URL
 
@@ -39,14 +40,14 @@ def get_quote_of_the_day():
     data = {
         'text': '_"' + quote['quote'] + '" —' + quote['author'] + "_"
     }
-    handle_post_to_slack(data)
+    post_to_slack(data)
 
 
-def handle_post_to_slack(data):
+def post_to_slack(data):
     requests.post(SLACK_URL, data=json.dumps(data))
 
 
-def post_to_slack(name, user_chores):
+def chores_to_slack(name, user_chores):
     get_quote_of_the_day()
     for user in user_chores:
         data = {
@@ -72,7 +73,7 @@ def post_to_slack(name, user_chores):
                     },
                 ],
             })
-        handle_post_to_slack(data)
+        post_to_slack(data)
 
 
 def get_user_chores(chores):
@@ -107,16 +108,29 @@ def get_chores(period):
 
 def bi_weekly_clean():
     if should_run_bi_weekly():
-        post_to_slack('Bi-weekly', get_user_chores(get_chores('bi-weekly')))
+        chores_to_slack('Bi-weekly', get_user_chores(get_chores('bi-weekly')))
 
 
 def quad_weekly_clean():
     if should_run_quad_weekly():
-        post_to_slack('Quad-weekly', get_user_chores(get_chores('quad-weekly')))
+        chores_to_slack('Quad-weekly', get_user_chores(get_chores('quad-weekly')))
 
 
 def weekly_clean():
-    post_to_slack('Weekly', get_user_chores(get_chores('weekly')))
+    chores_to_slack('Weekly', get_user_chores(get_chores('weekly')))
+
+
+def credit_check():
+    for bill in chores['bills']:
+        if bill['credit'] - STANDARD_DUES <= 0:
+            data = {
+                'text': "@{}, you currently don't have enough credit"
+                " for the next rent payment. Please pay the minimum"
+                " amount to Keane as soon as possible. goo.gl/BKUN3b".format(
+                    bill['name']
+                )
+            }
+            post_to_slack(data)
 
 
 if __name__ == '__main__':
@@ -125,9 +139,10 @@ if __name__ == '__main__':
 
     sched = BackgroundScheduler()
     sched.start()
-    sched.add_job(bi_weekly_clean, trigger='cron', day='6', hour='8')
-    sched.add_job(weekly_clean, trigger='cron', day='6', hour='8')
-    sched.add_job(quad_weekly_clean, trigger='cron', day='6', hour='8')
+    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
+    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour='8')
+    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
+    sched.add_job(credit_check, trigger='cron', day='27', hour='8')
 
     x = 0
     while True:
