@@ -15,7 +15,6 @@ USERS = ('gemanley', 'jpbush', 'keane',)
 SHARED_CATEGORIES = ('Kitchen', 'General',)
 SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
-STANDARD_DUES = 440
 
 # SLACK_URL = DEV_URL
 
@@ -121,8 +120,8 @@ def weekly_clean():
 
 
 def credit_check():
-    for bill in chores['bills']:
-        if bill['credit'] - STANDARD_DUES <= 0:
+    for bill in chores['credit']:
+        if bill['credit'] - chores['dues'] <= 0:
             data = {
                 'text': "@{}, you currently don't have enough credit"
                 " for the next rent payment. Please pay the minimum"
@@ -133,21 +132,22 @@ def credit_check():
             post_to_slack(data)
 
 
+def reload_config():
+    chores.clear()
+    with open('chores.yml') as f:
+        chores.update(yaml.load(f))
+
+
 if __name__ == '__main__':
-    f = open('chores.yml')
-    chores.update(yaml.load(f))
+    reload_config()
 
     sched = BackgroundScheduler()
     sched.start()
-    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
-    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour='8')
-    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour='8')
-    sched.add_job(credit_check, trigger='cron', day='27-31', hour='8')
+    sched.add_job(reload_config, trigger='cron', hour=7)
+    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(credit_check, trigger='cron', day='27-31', hour=8)
 
-    x = 0
     while True:
         time.sleep(1)
-        x += 1
-        if x % 5 == 0:
-            sys.stdout.write('.')
-            sys.stdout.flush()
