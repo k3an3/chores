@@ -12,7 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 SLACK_URL = 'https://hooks.slack.com/services/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'
 DEV_URL = 'https://hooks.slack.com/services/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'
 USERS = ('gemanley', 'jpbush', 'keane',)
-SHARED_CATEGORIES = ('Kitchen', 'General',)
+SHARED_CATEGORIES = ('Kitchen', 'General', 'Living-room')
 SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
 
