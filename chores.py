@@ -75,22 +75,31 @@ def chores_to_slack(name, user_chores):
         post_to_slack(data)
 
 
+def get_shared_chores(chores, group):
+    shared_chores = []
+    for group in chores:
+        if group in group:
+            for chore in chores[group]:
+                shared_chores.append(group + ':' + chore)
+    return random.sample(shared_chores, len(shared_chores))
+
+
 def get_user_chores(chores):
     user_chores = {}
     for user in USERS:
         user_chores[user] = []
+    for i, chore in enumerate(get_shared_chores(chores, SHARED_CATEGORIES)):
+        user_chores[USERS[i % len(USERS)]].append(chore)
+    for i, chore in enumerate(get_shared_chores(chores, SECONDARY_SHARED_CATEGORIES)):
+        user_chores[SECONDARY_SHARED_USERS[i % len(SECONDARY_SHARED_USERS)]].append(chore)
     for group in chores:
         if group in SHARED_CATEGORIES:
-            for chore in chores[group]:
-                user_chores[random.choice(USERS)].append(group + ':' + chore)
+            pass
         elif group in SECONDARY_SHARED_CATEGORIES:
-            for chore in chores[group]:
-                user_chores[random.choice(SECONDARY_SHARED_USERS)].append(
-                    group + ':' + chore)
-                for user in USERS:
-                    if user not in SECONDARY_SHARED_USERS:
-                        user_chores[user].append(
-                            group + ':' + chore)
+            for user in USERS:
+                if user not in SECONDARY_SHARED_USERS:
+                    user_chores[user].append(
+                        group + ':' + chore)
         else:
             for user in USERS:
                 for chore in chores[group][1:]:
