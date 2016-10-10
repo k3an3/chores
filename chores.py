@@ -48,7 +48,6 @@ def post_to_slack(data):
 
 
 def chores_to_slack(name, user_chores):
-    get_quote_of_the_day()
     for user in user_chores:
         data = {
             'text': '{} chores for @{}'.format(name, user),
@@ -90,10 +89,8 @@ def get_user_chores(chores):
     for user in USERS:
         user_chores[user] = []
     for i, chore in enumerate(get_shared_chores(chores, SHARED_CATEGORIES)):
-        print('shared-assigning chore', chore, 'to', USERS[i%len(USERS)])
         user_chores[USERS[i % len(USERS)]].append(chore)
     for i, chore in enumerate(get_shared_chores(chores, SECONDARY_SHARED_CATEGORIES)):
-        print('secondary-shared-assigning chore', chore, 'to', SECONDARY_SHARED_USERS[i%len(SECONDARY_SHARED_USERS)])
         user_chores[SECONDARY_SHARED_USERS[i % len(SECONDARY_SHARED_USERS)]].append(chore)
     for group in chores:
         if group in SHARED_CATEGORIES:
@@ -101,13 +98,12 @@ def get_user_chores(chores):
         elif group in SECONDARY_SHARED_CATEGORIES:
             for user in USERS:
                 if user not in SECONDARY_SHARED_USERS:
-                    print('assigning chore', chore, 'to', user)
-                    user_chores[user].append(
-                        group + ':' + chore)
+                    for chore in chores[group]:
+                        user_chores[user].append(
+                            group + ':' + chore)
         else:
             for user in USERS:
                 for chore in chores[group][1:]:
-                    print('assigning chore', chore, 'to', user)
                     user_chores[user].append(group + ':' + chore)
     return user_chores
 
@@ -157,6 +153,7 @@ if __name__ == '__main__':
 
     sched = BackgroundScheduler()
     sched.start()
+    sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=8)
     sched.add_job(reload_config, trigger='cron', hour=7)
     sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
     sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=8)
