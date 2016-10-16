@@ -3,14 +3,12 @@
 import datetime
 import json
 import random
-import sys
 import time
 
 import requests
-import yaml
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from utils import update
+from utils import chores, update, reload_config, safe_append
 
 SLACK_URL = 'https://hooks.slack.com/services/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'
 DEV_URL = 'https://hooks.slack.com/services/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'
@@ -20,8 +18,6 @@ SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
 
 # SLACK_URL = DEV_URL
-
-chores = {}
 
 
 def get_week():
@@ -55,22 +51,15 @@ def chores_to_slack(name, user_chores):
             'text': '{} chores for @{}'.format(name, user),
             'attachments': [],
         }
-        for chore in user_chores[user]:
+        r = lambda: random.randint(0, 255)
+        for group in user_chores[user]:
             data['attachments'].append({
+                'color': '#{:02x}{:02x}{:02x}'.format(r(), r(), r()),
                 'fields': [
                     {
-                        'title': chore.split(':')[0],
-                        'value': chore.split(':')[1],
-                        'short': 'false'
-                    }
-                ],
-                'attachment_type': 'default',
-                'actions': [
-                    {
-                        'name': 'done',
-                        'text': 'Done',
-                        'type': 'button',
-                        'value': 'done',
+                        'title': group,
+                        'value': '- ' + '\n- '.join(user_chores[user][group]),
+                        'short': 'false',
                     },
                 ],
             })
@@ -82,18 +71,18 @@ def get_shared_chores(chores, chore_group):
     for group in chores:
         if group in chore_group:
             for chore in chores[group]:
-                shared_chores.append(group + ':' + chore)
+                shared_chores.append((chore, group))
     return random.sample(shared_chores, len(shared_chores))
 
 
 def get_user_chores(chores):
     user_chores = {}
     for user in USERS:
-        user_chores[user] = []
+        user_chores[user] = {}
     for i, chore in enumerate(get_shared_chores(chores, SHARED_CATEGORIES)):
-        user_chores[USERS[i % len(USERS)]].append(chore)
+        safe_append(user_chores[USERS[i % len(USERS)]], chore[1], chore[0])
     for i, chore in enumerate(get_shared_chores(chores, SECONDARY_SHARED_CATEGORIES)):
-        user_chores[SECONDARY_SHARED_USERS[i % len(SECONDARY_SHARED_USERS)]].append(chore)
+        safe_append(user_chores[SECONDARY_SHARED_USERS[i % len(SECONDARY_SHARED_USERS)]], chore[1], chore[0])
     for group in chores:
         if group in SHARED_CATEGORIES:
             pass
@@ -101,12 +90,11 @@ def get_user_chores(chores):
             for user in USERS:
                 if user not in SECONDARY_SHARED_USERS:
                     for chore in chores[group]:
-                        user_chores[user].append(
-                            group + ':' + chore)
+                        safe_append(user_chores[user], group, chore)
         else:
             for user in USERS:
                 for chore in chores[group][1:]:
-                    user_chores[user].append(group + ':' + chore)
+                    safe_append(user_chores[user], group, chore)
     return user_chores
 
 
@@ -144,24 +132,18 @@ def credit_check():
             post_to_slack(data)
 
 
-def reload_config():
-    chores.clear()
-    with open('chores.yml') as f:
-        chores.update(yaml.load(f))
-
-
 if __name__ == '__main__':
     reload_config()
 
     sched = BackgroundScheduler()
     sched.start()
-    sched.add_job(update, trigger='cron', hour=6)
-    sched.add_job(reload_config, trigger='cron', hour=7)
-    sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(credit_check, trigger='cron', day='27-31', hour=8)
+    sched.add_job(update, trigger='cron', hour=11)
+    sched.add_job(reload_config, trigger='cron', hour=12)
+    sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=13)
+    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=13)
+    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=13)
+    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour=13)
+    sched.add_job(credit_check, trigger='cron', day='27-31', hour=13)
 
     while True:
         time.sleep(1)
