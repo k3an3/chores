@@ -137,13 +137,13 @@ if __name__ == '__main__':
 
     sched = BackgroundScheduler()
     sched.start()
-    sched.add_job(update, trigger='cron', hour=11)
-    sched.add_job(reload_config, trigger='cron', hour=12)
-    sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=13)
-    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=13)
-    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=13)
+    sched.add_job(update, trigger='cron', hour=6)
+    sched.add_job(reload_config, trigger='cron', hour=7)
+    sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=8)
     sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour=13)
-    sched.add_job(credit_check, trigger='cron', day='27-31', hour=13)
+    sched.add_job(credit_check, trigger='cron', day='27-31', hour=8)
 
     while True:
         time.sleep(1)
