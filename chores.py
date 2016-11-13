@@ -8,7 +8,7 @@ import time
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from utils import chores, update, reload_config, safe_append
+from utils import chores, update, reload_config, safe_append, merge_chores, colors
 
 SLACK_URL = 'https://hooks.slack.com/services/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'
 DEV_URL = 'https://hooks.slack.com/services/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'
@@ -51,10 +51,9 @@ def chores_to_slack(name, user_chores):
             'text': '{} chores for @{}'.format(name, user),
             'attachments': [],
         }
-        r = lambda: random.randint(0, 255)
         for group in user_chores[user]:
             data['attachments'].append({
-                'color': '#{:02x}{:02x}{:02x}'.format(r(), r(), r()),
+                'color': '#{}'.format(colors.get(group, '000000')),
                 'fields': [
                     {
                         'title': group,
@@ -132,6 +131,17 @@ def credit_check():
             post_to_slack(data)
 
 
+def run_chores():
+    all_chores = []
+    if should_run_quad_weekly() or True:
+        all_chores.append(get_user_chores(get_chores('quad-weekly')))
+    if should_run_bi_weekly() or True:
+        all_chores.append(get_user_chores(get_chores('bi-weekly')))
+    all_chores.append(get_user_chores(get_chores('weekly')))
+    all_chores = merge_chores(all_chores)
+    chores_to_slack('All', all_chores)
+
+
 if __name__ == '__main__':
     reload_config()
 
@@ -140,9 +150,7 @@ if __name__ == '__main__':
     sched.add_job(update, trigger='cron', hour=6)
     sched.add_job(reload_config, trigger='cron', hour=7)
     sched.add_job(get_quote_of_the_day, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(bi_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(weekly_clean, trigger='cron', day_of_week='sat', hour=8)
-    sched.add_job(quad_weekly_clean, trigger='cron', day_of_week='sat', hour=8)
+    sched.add_job(run_chores, trigger='cron', day_of_week='sat', hour=8)
     sched.add_job(credit_check, trigger='cron', day='27-31', hour=8)
 
     while True:
