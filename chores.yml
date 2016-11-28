@@ -1,38 +1,38 @@
 bi-weekly:
   - Kitchen:
-    - scrub/mop floor
+    - mop floor
     - wipe down outside of fridge with cleaner
     - wipe down outside of dishwasher with cleaner
 
   - Bathroom:
-    - scrub/mop floor
+    - mop floor
     - scrub toilet inside and out with cleaner
     - scrub sink with cleaner
     - wash rugs
 
   - Bedroom:
     - wash bed sheets
-    - dust surfaces
 
   - General:
     - vacuum entire appartment
 
 weekly:
   - Kitchen:
-    - wipe down counters, stove, microwave outside with cleaner
+    - wipe down counters with cleaner
+    - wipe down stove with cleaner
+    - wipe down microwave outside with cleaner
     - scrub sink with cleaner
     - change hand towel
     - sweep floor
     - wipe off dining table
 
   - Bathroom:
-    - wipe down sink with paper towel and water
-    - change hand towel and face towel
-    - clean mirror with windex
+    - change hand towels
+    - clean mirror
 
   - Bedroom:
     - clean keyboard, mouse
-    - wipe down desk, nightstand with water
+    - wipe down desk, nightstand
     - clean phone, keys, wallet
 
 quad-weekly:
@@ -48,9 +48,10 @@ quad-weekly:
   - Bedroom:
     - lightly clean monitors
     - dust computer tower
-
-  - Living-room:
-    - dust everything including light fixtures
+    - dust surfaces
+  
+  - Personal:
+    - clean old food out of fridge
 
 credit:
   - name: jpbush
