@@ -133,18 +133,21 @@ def credit_check():
 
 def run_chores():
     all_chores = []
-    if should_run_quad_weekly() or True:
+    chore_string = ""
+    if should_run_quad_weekly():
         all_chores.append(get_user_chores(get_chores('quad-weekly')))
-    if should_run_bi_weekly() or True:
+        chore_string += "Quad-Weekly, "
+    if should_run_bi_weekly():
         all_chores.append(get_user_chores(get_chores('bi-weekly')))
+        chore_string += "Bi-Weekly, "
     all_chores.append(get_user_chores(get_chores('weekly')))
+    chore_string += "Weekly"
     all_chores = merge_chores(all_chores)
-    chores_to_slack('All', all_chores)
+    chores_to_slack(chore_string, all_chores)
 
 
 if __name__ == '__main__':
     reload_config()
-
     sched = BackgroundScheduler()
     sched.start()
     sched.add_job(update, trigger='cron', hour=6)
