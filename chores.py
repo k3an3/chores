@@ -3,12 +3,12 @@
 import datetime
 import json
 import random
-import time
+import sys
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from utils import chores, update, reload_config, safe_append, merge_chores, colors
+from utils import chores, reload_config, safe_append, merge_chores, colors
 
 SLACK_URL = 'https://hooks.slack.com/services/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'
 DEV_URL = 'https://hooks.slack.com/services/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'
@@ -17,7 +17,7 @@ SHARED_CATEGORIES = ('Kitchen', 'General', 'Living-room')
 SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
 
-# SLACK_URL = DEV_URL
+SLACK_URL = DEV_URL
 
 
 def get_week():
@@ -92,7 +92,7 @@ def get_user_chores(chores):
                         safe_append(user_chores[user], group, chore)
         else:
             for user in USERS:
-                for chore in chores[group][1:]:
+                for chore in chores[group]:
                     safe_append(user_chores[user], group, chore)
     return user_chores
 
@@ -149,6 +149,8 @@ def run_chores():
 if __name__ == '__main__':
     reload_config()
     sched = BackgroundScheduler()
+    run_chores()
+    sys.exit()
     sched.start()
     sched.add_job(update, trigger='cron', hour=6)
     sched.add_job(reload_config, trigger='cron', hour=7)

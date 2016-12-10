@@ -9,6 +9,7 @@ colors = {
     'Living-room': 'a34418',
     'Bedroom': '1844a3',
     'General': '6318a3',
+    'Personal': 'f47a42',
 }
 
 
