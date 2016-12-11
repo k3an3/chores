@@ -3,7 +3,7 @@
 import datetime
 import json
 import random
-import sys
+import time
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -17,7 +17,8 @@ SHARED_CATEGORIES = ('Kitchen', 'General', 'Living-room')
 SECONDARY_SHARED_CATEGORIES = ('Bathroom',)
 SECONDARY_SHARED_USERS = ('keane', 'gemanley',)
 
-SLACK_URL = DEV_URL
+
+# SLACK_URL = DEV_URL
 
 
 def get_week():
@@ -149,8 +150,6 @@ def run_chores():
 if __name__ == '__main__':
     reload_config()
     sched = BackgroundScheduler()
-    run_chores()
-    sys.exit()
     sched.start()
     sched.add_job(update, trigger='cron', hour=6)
     sched.add_job(reload_config, trigger='cron', hour=7)
