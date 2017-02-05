@@ -8,7 +8,7 @@ import time
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from utils import chores, reload_config, safe_append, merge_chores, colors
+from utils import chores, reload_config, safe_append, merge_chores, colors, update
 
 SLACK_URL = 'https://hooks.slack.com/services/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'
 DEV_URL = 'https://hooks.slack.com/services/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'

@@ -13,9 +13,6 @@ bi-weekly:
   - Bedroom:
     - wash bed sheets
 
-  - General:
-    - vacuum entire appartment
-
 weekly:
   - Kitchen:
     - wipe down counters with cleaner
@@ -35,6 +32,9 @@ weekly:
     - wipe down desk, nightstand
     - clean phone, keys, wallet
 
+  - General:
+    - vacuum entire appartment
+
 quad-weekly:
   - Kitchen:
     - clean inside of microwave
@@ -51,12 +51,12 @@ quad-weekly:
     - dust surfaces
   
   - Personal:
-    - clean old food out of fridge
+    - clean old food out of fridge/freezer
 
 credit:
   - name: jpbush
-    credit: 268
+    credit: 1330
   - name: gemanley
-    credit: 146
+    credit: 163
 
 dues: 465
