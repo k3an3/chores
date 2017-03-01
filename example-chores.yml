@@ -49,14 +49,30 @@ quad-weekly:
     - lightly clean monitors
     - dust computer tower
     - dust surfaces
-  
+
   - Personal:
     - clean old food out of fridge/freezer
 
-credit:
-  - name: jpbush
-    credit: 1330
-  - name: gemanley
-    credit: 163
+users:
+  - name: user1
+    credit: 5678
+  - name: user2
+    credit: 9000
+  - name: user3
 
-dues: 465
+shared_categories:
+  - Kitchen
+  - General
+  - Living-room
+
+secondary_shared_categories:
+  - Bathroom
+
+secondary_shared_users:
+  - user2
+  - user3
+
+dues: 999
+payto: user3
+slack_token: <your_slack_token>
+payments: <link_to_spreadsheet> (optional)
