@@ -173,7 +173,7 @@ def run_chores():
 
 if __name__ == '__main__':
     reload_config()
-    weekly_clean()
+    
     sched = BackgroundScheduler()
     sched.start()
     sched.add_job(update, trigger='cron', hour=6)
