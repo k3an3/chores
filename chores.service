@@ -1,0 +1,14 @@
+[Unit]
+Description=Does my chores
+After=network.target
+
+[Service]
+User=chores
+Group=chores
+WorkingDirectory=/srv/chores/
+ExecStart=/srv/chores/env/bin/python3 /srv/chores/chores.py
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
