@@ -101,7 +101,7 @@ def get_user_chores(chores: Dict[str, str]) -> Dict[str, str]:
         # e.g. a second bathroom that's not shared
         elif group in config['secondary_shared_categories']:
             for user in config['users']:
-                if user not in config['secondary_shared_users']:
+                if user['name'] not in config['secondary_shared_users']:
                     for chore in chores[group]:
                         safe_append(user_chores[user['name']], group, chore)
         else:
@@ -173,7 +173,10 @@ def run_chores():
 
 if __name__ == '__main__':
     reload_config()
-    
+
+    print(get_user_chores(get_chores('weekly')))
+    raise SystemExit
+
     sched = BackgroundScheduler()
     sched.start()
     sched.add_job(update, trigger='cron', hour=6)
