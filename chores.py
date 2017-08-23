@@ -9,7 +9,7 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from utils import config, reload_config, safe_append, merge_chores, colors, update, should_run_bi_weekly, \
-    should_run_quad_weekly, email_users
+    should_run_quad_weekly, email_users, email_chores
 
 # Base URL for Slack incoming webhooks
 SLACK_URL = 'https://hooks.slack.com/services/{}'
@@ -169,15 +169,12 @@ def run_chores():
     chore_string += "Weekly"
     all_chores = merge_chores(all_chores)
     chores_to_slack(chore_string, all_chores)
+    for user, email in email_users():
+        email_chores(email, chore_string, all_chores[user])
 
 
 if __name__ == '__main__':
     reload_config()
-
-    print(get_user_chores(get_chores('weekly')))
-    for user, email in email_users():
-        email_chores(email, "Test", chores[user])
-    raise SystemExit
 
     sched = BackgroundScheduler()
     sched.start()

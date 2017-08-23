@@ -89,24 +89,22 @@ def email_users():
 
 
 def email_chores(email, message, chores):
-    body = message + "chores:"
+    body = message + " chores:<br>"
+    for cat in chores:
+        body += "<br><b>" + cat + "</b><br>"
+        for chore in chores[cat]:
+            body += '<input type="checkbox"> ' + chore + "<br>"
+    send_email(email, body)
+
 
 # Adapted from http://stackoverflow.com/a/8321609/1974978
-def send_email(data):
-    f = open(settings.LOG_FILE, 'a')
-    f.write("---------------------------------")
-    f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
-    f.write("\n")
-    f.write(data)
-    f.write("---------------------------------")
-    f.write("\n")
-    if settings.SMTP_SERVER:
-        msg = MIMEText(data)
-        msg['Subject'] = settings.EMAIL_SUBJECT
-        msg['To'] = settings.EMAIL_TO
-        msg['From'] = settings.EMAIL_FROM
-        mail = smtplib.SMTP(settings.SMTP_SERVER, settings.SMTP_PORT)
-        mail.starttls()
-        mail.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-        mail.sendmail(settings.EMAIL_FROM, settings.EMAIL_TO, msg.as_string())
-        mail.quit()
+def send_email(email, data):
+    msg = MIMEText(data, 'html')
+    msg['Subject'] = "Chores"
+    msg['To'] = email
+    msg['From'] = config['mail_from']
+    mail = smtplib.SMTP(config['smtp_server'], config['smtp_port'])
+    mail.starttls()
+    mail.login(config['smtp_username'], config['smtp_password'])
+    mail.sendmail(config['mail_from'], email, msg.as_string())
+    mail.quit()
