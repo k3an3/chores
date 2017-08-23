@@ -76,3 +76,9 @@ dues: 999
 payto: user3
 slack_token: <your_slack_token>
 payments: <link_to_spreadsheet> (optional)
+
+smtp_server: smtp.example.com
+smtp_port: 587
+smtp_username: me@example.com
+smtp_password: secretpassword
+mail_from: chores@example.com
