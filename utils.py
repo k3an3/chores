@@ -1,7 +1,6 @@
 import datetime
 import smtplib
 import subprocess
-from datetime import datetime
 from email.mime.text import MIMEText
 from typing import Dict
 
